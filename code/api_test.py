@@ -1,30 +1,34 @@
-# import requests
-#
-# url = "https://weatherapi-com.p.rapidapi.com/current.json"
-#
-# querystring = {"q":"-29.50768, -54.69163"}
-#
-# headers = {
-# 	"content-type": "application/octet-stream",
-# 	"X-RapidAPI-Key": "b17d9df359msha9bf5b38e5b5dc5p12f47bjsna807f56a4a37",
-# 	"X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com"
-# }
-#
-# response = requests.get(url, headers=headers, params=querystring)
-#
-# print(response.json())
-
 import requests
+import os
+
+# Access a specific environment variable
+api_key = os.environ.get('API_KEY')
 
 url = "https://weatherapi-com.p.rapidapi.com/history.json"
 
-querystring = {"q":"-22.272345186596755, -59.25903616327163","dt":"2023-04-28","lang":"en"}
+querystring = {"q":"-1.328882860515801,-76.62785482600087","dt":"2023-06-22","lang":"en"}
 
 headers = {
-	"X-RapidAPI-Key": "b17d9df359msha9bf5b38e5b5dc5p12f47bjsna807f56a4a37",
+	"X-RapidAPI-Key": api_key,
 	"X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com"
 }
 
 response = requests.get(url, headers=headers, params=querystring)
 
 print(response.json())
+
+
+
+
+# url = "https://koppen-climate-classification.p.rapidapi.com/classification"
+#
+# querystring = {"lat":"35.95","lon":"19.51"}
+#
+# headers = {
+# 	"X-RapidAPI-Key": api_key,
+# 	"X-RapidAPI-Host": "koppen-climate-classification.p.rapidapi.com"
+# }
+#
+# response = requests.get(url, headers=headers, params=querystring)
+#
+# print(response.json())

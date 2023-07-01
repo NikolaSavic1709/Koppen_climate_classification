@@ -1,7 +1,9 @@
+import datetime
+
 import numpy as np
 from shapely.geometry import Polygon, Point
 from sklearn.cluster import KMeans
-from map import show_on_map
+from map import show_on_map, main
 import random
 
 
@@ -16,7 +18,7 @@ def get_uniform_points_for_continent(file_path, point_count):
     polygon = Polygon(bounds)
 
     points = []
-    while len(points) < 5 * point_count:
+    while len(points) < 10 * point_count:
         point = (np.random.uniform(polygon.bounds[0], polygon.bounds[2]),
                  np.random.uniform(polygon.bounds[1], polygon.bounds[3]))
         if polygon.contains(Point(point)):
@@ -26,19 +28,21 @@ def get_uniform_points_for_continent(file_path, point_count):
     kmeans = KMeans(n_clusters=point_count, n_init=100).fit(X)
     centroids = kmeans.cluster_centers_
 
-    expanded_centroids = []
-
-    for centroid in centroids:
-        expanded_centroid = np.append(centroid, random.choice([1, 2, 3, 4, 5]))
-        expanded_centroids.append(expanded_centroid)
-
-    return expanded_centroids
+    with open("../data/uniform_points.txt", "a") as file:
+        for centroid in centroids:
+            file.write(str(centroid[0]) + ',' + str(centroid[1]))
+            file.write("\n")
+    print(datetime.datetime.now(), file_path, "finished")
 
 
 def get_uniform_points():
-    points=get_uniform_points_for_continent("../data/borders/north_america.txt", 36)+get_uniform_points_for_continent("../data/borders/south_america.txt", 26)+get_uniform_points_for_continent("../data/borders/australia.txt", 12)+get_uniform_points_for_continent("../data/borders/euroasia.txt", 81)+get_uniform_points_for_continent("../data/borders/africa.txt", 45)
-
-    show_on_map(np.transpose(points))
+    get_uniform_points_for_continent("../data/boundaries/north_america.txt", 400)
+    get_uniform_points_for_continent("../data/boundaries/south_america.txt", 220)
+    get_uniform_points_for_continent("../data/boundaries/australia.txt", 100)
+    get_uniform_points_for_continent("../data/boundaries/euroasia.txt", 870)
+    get_uniform_points_for_continent("../data/boundaries/africa.txt", 410)
+    # main()
+    # show_on_map(np.transpose(points))
 
 
 if __name__ == '__main__':
