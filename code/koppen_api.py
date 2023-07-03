@@ -9,7 +9,7 @@ api_key = os.environ.get('API_KEY')
 
 
 def draw_map():
-    folder_path = "../data/weather_index"  # Replace with the path to your folder
+    folder_path = "../data/weather_index_5000"  # Replace with the path to your folder
     map_data = [[], [], []]
     # Iterate over each file in the folder
     for filename in os.listdir(folder_path):
@@ -24,21 +24,26 @@ def draw_map():
 
 
 def write_zones_into_file():
-    folder_path = "../data/weather_index"
+    folder_path = "../data/weather_index_5000"
     map_data = [[], [], []]
 
-    for filename in os.listdir(folder_path):
-        file_path = os.path.join(folder_path, filename)
-        if filename.endswith(".json"):
+    for i in range(5000):
+        if i%100==0:
+            print("STO",i)
+        file_path = "../data/weather_index_5000/" + str(i + 1) + ".json"
+        try:
             with open(file_path) as file:
                 data = json.load(file)
-                map_data[1].append(data["lat"])
-                map_data[0].append(data["lon"])
+                map_data[0].append(data["lat"])
+                map_data[1].append(data["lon"])
                 map_data[2].append(get_koppen_zone(data['lat'], data['lon']))
+        except Exception as e:
+            print(i,e)
+            continue
 
-    with open("../data/zones/weather_index_zones.txt", "w") as file:
+    with open("../data/zones/weather_index_zones_5000.txt", "w") as file:
         for location in np.transpose(map_data):
-            file.write(f"{location[1]},{location[0]},{location[2]}\n")
+            file.write(f"{location[0]},{location[1]},{location[2]}\n")
 
 
 def get_koppen_zone(lat, lon):
@@ -51,16 +56,14 @@ def get_koppen_zone(lat, lon):
         "X-RapidAPI-Host": "koppen-climate-classification.p.rapidapi.com"
     }
 
-    response_json = requests.get(url, headers=headers, params=querystring).json()
+    response_json = requests.get("url", headers=headers, params=querystring).json()
     # latitude = response_json["location"]["latitude"]
     # longitude = response_json["location"]["longitude"]
     if 'classification' in response_json:
         return response_json["classification"]
     else:
-        print(lat,lon,response_json)
+        print(lat, lon, response_json)
         return '/'
-
-
 
 
 if __name__ == '__main__':
