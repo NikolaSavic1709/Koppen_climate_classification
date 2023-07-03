@@ -26,7 +26,7 @@ def show_on_map(data):
 
     cmap = ListedColormap(
         np.array([(255, 50, 0), (255, 221, 0), (150, 255, 0), (0, 255, 170), (0, 208, 255), (0, 0, 255)]) / 255.0)
-    plt.scatter(x, y, s=50, c=zone, cmap=cmap)
+    plt.scatter(x, y, s=30, c=zone, cmap=cmap)
 
     cbar = plt.colorbar()
     cbar.set_ticks([1.4166667, 2.25, 3.083333, 3.91666667, 4.75, 5.583333])
@@ -38,20 +38,27 @@ def show_on_map(data):
     plt.title("Koppen climate classification")
     plt.xlabel("Longitude")
     plt.ylabel("Latitude")
-    manager = plt.get_current_fig_manager()
-    manager.full_screen_toggle()
+    # manager = plt.get_current_fig_manager()
+    # manager.full_screen_toggle()
     plt.show()
 
 
 def main():
     points = []
-    with open("../data/zones/weather_index_zones.txt", 'r') as file:
+    zones = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
+
+
+    i = 0
+    with open("../data/zones/weather_index_zones_5000.txt", 'r') as file:
         for line in file:
             values = line.strip().split(',')
             if len(values) >= 3:
-                if values[2] != '/':
-                    zone_class = zone_classes[values[2]]
-                    points.append((float(values[1]), float(values[0]), zone_class))
+                # if values[2] != '/':
+                zone_class = zone_classes[values[2]]
+                zones[zone_class] += 1
+                points.append((float(values[1]), float(values[0]), zone_class))
+                i += 1
+    print(zones)
     show_on_map(np.transpose(points))
 
 
