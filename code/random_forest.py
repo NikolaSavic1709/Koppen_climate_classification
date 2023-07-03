@@ -72,6 +72,7 @@ def prepare_data(hours_frequency, location_weight, temperature_weight, test_size
                         location_data.append(hour["precip_mm"])
                         location_data.append(hour["humidity"])
                 if i not in random_numbers:
+                # if i>1799 or i<1550:
                     x_train.append(location_data)
                     y_train.append(zone_classes[get_zone_by_location(data["lat"], data["lon"])])
                 else:
